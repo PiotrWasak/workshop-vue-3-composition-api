@@ -59,6 +59,7 @@
 import orderBy from "lodash/orderby";
 import { computed, ref } from "vue";
 import { useFetchResource } from "@/composables/useFetchResource";
+import { useGlobalEvent } from "@/composables/useGlobalEvent";
 
 const {
   data: characters,
@@ -83,6 +84,10 @@ function setOrderKey(key) {
 }
 
 fetchAllCharacters();
+
+useGlobalEvent("keypress", () => {
+  characters.value.pop();
+});
 </script>
 
 <style scoped>
