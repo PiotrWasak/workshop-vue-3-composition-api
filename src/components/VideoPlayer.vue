@@ -23,8 +23,9 @@ function handleControlBtn() {
 }
 
 useGlobalEvent("keypress", (event) => {
-  if (event.charCode === 32)
-    video.value.paused ? video.value.play() : video.value.pause();
+  if (event.charCode !== 32) return;
+  event.preventDefault();
+  video.value.paused ? video.value.play() : video.value.pause();
 });
 </script>
 <style scoped></style>
