@@ -2,9 +2,7 @@
   <div>
     <div class="border-b-2 pb-4 border-gray-300 text-center">
       Order by
-      <button class="btn bg-blue-500 mr-4" @click="setOrderKey('name')">
-        Name
-      </button>
+      <button class="btn bg-blue-500 mr-4" @click="setOrderKey('name')">Name</button>
       <button class="btn bg-orange-500" @click="setOrderKey('id')">Id</button>
     </div>
     <div class="m-auto container flex flex-wrap mt-10">
@@ -15,12 +13,7 @@
       >
         <div class="card-inner">
           <div class="image">
-            <img
-              :src="character.image"
-              class="bg-gray-200"
-              height="300"
-              width="300"
-            />
+            <img :src="character.image" class="bg-gray-200" height="300" width="300" />
           </div>
           <div class="content text-center mt-5">
             <span class="header text-xl">{{ character.name }}</span>
@@ -43,11 +36,25 @@
 <script>
 import axios from "axios";
 import orderBy from "lodash/orderby";
+import { ref } from "vue";
 export default {
+  setup() {
+    const characters = ref([]);
+    const loadingState = ref(null);
+    function fetchAllCharacters() {
+      loadingState.value = "loading";
+      axios.get("https://rickandmortyapi.com/api/character").then((response) => {
+        setTimeout(() => {
+          loadingState.value = "success";
+          characters.value = response.data.results;
+        }, 1000);
+      });
+    }
+    fetchAllCharacters();
+    return { characters, loadingState, fetchAllCharacters };
+  },
   data() {
     return {
-      characters: [],
-      loadingState: null,
       orderKey: "id",
     };
   },
@@ -60,20 +67,6 @@ export default {
     setOrderKey(key) {
       this.orderKey = key;
     },
-    fetchAllCharacters() {
-      this.loadingState = "loading";
-      axios
-        .get("https://rickandmortyapi.com/api/character")
-        .then((response) => {
-          setTimeout(() => {
-            this.loadingState = "success";
-            this.characters = response.data.results;
-          }, 1000);
-        });
-    },
-  },
-  created() {
-    this.fetchAllCharacters();
   },
 };
 </script>
